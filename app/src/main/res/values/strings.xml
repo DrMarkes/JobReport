@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Отчет о работе</string>
+    <string name="action_settings">Настройки</string>
+    <string name="title_activity_save">Ввод данных</string>
+</resources>
