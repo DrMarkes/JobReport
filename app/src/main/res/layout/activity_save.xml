@@ -16,5 +16,6 @@
         android:text="Medium Text"
         android:id="@+id/dateTextView"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:onClick="onClick"/>
 </RelativeLayout>
