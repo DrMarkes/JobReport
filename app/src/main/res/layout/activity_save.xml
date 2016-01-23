@@ -16,7 +16,9 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="true"
+            android:descendantFocusability="beforeDescendants">
 
             <TextView
                 android:id="@+id/dateTextView"
@@ -62,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/spinnerManipulation"
                 android:layout_marginTop="32dp"
-                android:cursorVisible="false"
+                android:inputType="textPersonName"
                 android:hint="@string/patient" />
 
             <EditText
