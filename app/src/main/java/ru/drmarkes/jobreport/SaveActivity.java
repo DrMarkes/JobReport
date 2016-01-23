@@ -1,22 +1,28 @@
 package ru.drmarkes.jobreport;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class SaveActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
+public class SaveActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, View.OnClickListener {
     static final String YEAR = "year";
     static final String MONTH = "month";
     static final String DAY = "day";
@@ -35,10 +41,12 @@ public class SaveActivity extends AppCompatActivity implements DatePickerDialog.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_save);
-        dateTextView = (TextView)findViewById(R.id.dateTextView);
+        FloatingActionButton save = (FloatingActionButton) findViewById(R.id.save);
+        save.setOnClickListener(this);
+        dateTextView = (TextView) findViewById(R.id.dateTextView);
         calendar = Calendar.getInstance(TimeZone.getDefault());
 
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             year = savedInstanceState.getInt(YEAR);
             month = savedInstanceState.getInt(MONTH);
             day = savedInstanceState.getInt(DAY);
@@ -50,34 +58,32 @@ public class SaveActivity extends AppCompatActivity implements DatePickerDialog.
         }
 
         showDate();
-
         initSpinner();
-
         initEditText();
     }
 
     private void initEditText() {
-        EditText nameEditText = (EditText)findViewById(R.id.nameEditText);
+        EditText nameEditText = (EditText) findViewById(R.id.nameEditText);
         name = nameEditText.getText().toString();
 
-        EditText numberEditText = (EditText)findViewById(R.id.numberEditText);
+        EditText numberEditText = (EditText) findViewById(R.id.numberEditText);
         number = numberEditText.getText().toString();
     }
 
     private void initSpinner() {
-        Spinner spinnerOrder = (Spinner)findViewById(R.id.spinnerOrder);
+        Spinner spinnerOrder = (Spinner) findViewById(R.id.spinnerOrder);
         ArrayAdapter<CharSequence> adapterOrder = ArrayAdapter.createFromResource(
                 this, R.array.order, android.R.layout.simple_spinner_item);
         adapterOrder.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerOrder.setAdapter(adapterOrder);
 
-        Spinner spinnerDepartment = (Spinner)findViewById(R.id.spinnerDepartment);
+        Spinner spinnerDepartment = (Spinner) findViewById(R.id.spinnerDepartment);
         ArrayAdapter<CharSequence> adapterDepartment = ArrayAdapter.createFromResource(
                 this, R.array.department, android.R.layout.simple_spinner_item);
         adapterDepartment.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerDepartment.setAdapter(adapterDepartment);
 
-        Spinner spinnerManipulation = (Spinner)findViewById(R.id.spinnerManipulation);
+        Spinner spinnerManipulation = (Spinner) findViewById(R.id.spinnerManipulation);
         ArrayAdapter<CharSequence> adapterManipulation = ArrayAdapter.createFromResource(
                 this, R.array.manipulation, android.R.layout.simple_spinner_item);
         adapterManipulation.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -85,8 +91,16 @@ public class SaveActivity extends AppCompatActivity implements DatePickerDialog.
     }
 
     public void onClick(View view) {
-        DialogFragment dialogFragment = new DatePickerFragment();
-        dialogFragment.show(getSupportFragmentManager(), "datePicker");
+        switch (view.getId()) {
+            case R.id.dateTextView:
+                DialogFragment dialogFragment = new DatePickerFragment();
+                dialogFragment.show(getSupportFragmentManager(), "datePicker");
+                break;
+            case R.id.save:
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                break;
+        }
     }
 
     @Override
