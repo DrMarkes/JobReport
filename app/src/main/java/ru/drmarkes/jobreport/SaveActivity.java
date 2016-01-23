@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import java.text.SimpleDateFormat;
@@ -23,6 +24,9 @@ public class SaveActivity extends AppCompatActivity implements DatePickerDialog.
     int year;
     int month;
     int day;
+
+    String name;
+    String number;
 
     private TextView dateTextView;
     Calendar calendar;
@@ -48,6 +52,16 @@ public class SaveActivity extends AppCompatActivity implements DatePickerDialog.
         showDate();
 
         initSpinner();
+
+        initEditText();
+    }
+
+    private void initEditText() {
+        EditText nameEditText = (EditText)findViewById(R.id.nameEditText);
+        name = nameEditText.getText().toString();
+
+        EditText numberEditText = (EditText)findViewById(R.id.numberEditText);
+        number = numberEditText.getText().toString();
     }
 
     private void initSpinner() {

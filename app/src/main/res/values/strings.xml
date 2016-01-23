@@ -27,9 +27,12 @@
         <item>Эндотрахеальный наркоз</item>
         <item>Спинномозговая анестезия</item>
         <item>Внутривенный наркоз</item>
-        <item>Катетеризация подключичной вены</item>
+        <item>Катетер. подключ. вены</item>
         <item>Консультация</item>
         <item>Проводниковая анестезия</item>
-        <item>Катетер. периферической вены</item>
+        <item>Катетер. периф. вены</item>
     </string-array>
+
+    <string name="patient">Фамилия пациента</string>
+    <string name="number">Номер истории болезни</string>
 </resources>
