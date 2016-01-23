@@ -5,7 +5,9 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.Spinner;
 import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -44,6 +46,28 @@ public class SaveActivity extends AppCompatActivity implements DatePickerDialog.
         }
 
         showDate();
+
+        initSpinner();
+    }
+
+    private void initSpinner() {
+        Spinner spinnerOrder = (Spinner)findViewById(R.id.spinnerOrder);
+        ArrayAdapter<CharSequence> adapterOrder = ArrayAdapter.createFromResource(
+                this, R.array.order, android.R.layout.simple_spinner_item);
+        adapterOrder.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerOrder.setAdapter(adapterOrder);
+
+        Spinner spinnerDepartment = (Spinner)findViewById(R.id.spinnerDepartment);
+        ArrayAdapter<CharSequence> adapterDepartment = ArrayAdapter.createFromResource(
+                this, R.array.department, android.R.layout.simple_spinner_item);
+        adapterDepartment.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerDepartment.setAdapter(adapterDepartment);
+
+        Spinner spinnerManipulation = (Spinner)findViewById(R.id.spinnerManipulation);
+        ArrayAdapter<CharSequence> adapterManipulation = ArrayAdapter.createFromResource(
+                this, R.array.manipulation, android.R.layout.simple_spinner_item);
+        adapterManipulation.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerManipulation.setAdapter(adapterManipulation);
     }
 
     public void onClick(View view) {
