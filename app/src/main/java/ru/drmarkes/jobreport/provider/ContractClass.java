@@ -1,4 +1,4 @@
-package ru.drmarkes.jobreport;
+package ru.drmarkes.jobreport.provider;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -7,7 +7,7 @@ import android.provider.BaseColumns;
  * Created by Андрей on 24.01.2016.
  */
 public final class ContractClass {
-    public final static String AUTHORITY = "ru.drmarkes.jobreport.contentprovider.provider.ContractClass";
+    public final static String AUTHORITY = "ru.drmarkes.jobreport.provider.ContractClass";
 
     private ContractClass(){}
 
