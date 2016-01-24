@@ -1,6 +1,7 @@
 package ru.drmarkes.jobreport.provider;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
@@ -18,6 +19,7 @@ public class MyProvider extends ContentProvider {
     private static final int JOB = 1;
     private static final int JOB_ID = 2;
     private static HashMap<String, String> sJobProjectionMap;
+    private DataBaseHelper dbHelper;
     private static final UriMatcher sUriMatcher;
     static {
         sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -75,7 +77,8 @@ public class MyProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        return false;
+        dbHelper = new DataBaseHelper(getContext());
+        return true;
     }
 
     @Override
@@ -85,12 +88,48 @@ public class MyProvider extends ContentProvider {
 
     @Override
     public String getType(Uri uri) {
-        return null;
+        switch (sUriMatcher.match(uri)) {
+            case JOB:
+                return ContractClass.Job.CONTENT_TYPE;
+            case JOB_ID:
+                return ContractClass.Job.CONTENT_ITEM_TYPE;
+            default:
+                throw new IllegalArgumentException("Unknown URI " + uri);
+        }
     }
 
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
-        return null;
+    public Uri insert(Uri uri, ContentValues initialValues) {
+        if(sUriMatcher.match(uri) != JOB) {
+            throw new IllegalArgumentException("Unknown URI " + uri);
+        }
+
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values;
+
+        if(initialValues != null) {
+            values = new ContentValues(initialValues);
+        } else {
+            values = new ContentValues();
+        }
+
+        long rowId = -1;
+        Uri rowUri = Uri.EMPTY;
+
+        if(values.containsKey(ContractClass.Job.COLUMN_NAME_PATIENT) == false) {
+            values.put(ContractClass.Job.COLUMN_NAME_PATIENT, "");
+        }
+        if(values.containsKey(ContractClass.Job.COLUMN_NAME_ROOM_HISTORY) == false) {
+            values.put(ContractClass.Job.COLUMN_NAME_ROOM_HISTORY, 0);
+        }
+
+        rowId = db.insert(ContractClass.Job.TABLE_NAME, ContractClass.Job.COLUMN_NAME_DATE, values);
+        if(rowId > 0) {
+            rowUri = ContentUris.withAppendedId(ContractClass.Job.CONTENT_ID_URI_BASE, rowId);
+            getContext().getContentResolver().notifyChange(rowUri, null);
+        }
+
+        return rowUri;
     }
 
     @Override
