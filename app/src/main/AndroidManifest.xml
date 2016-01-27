@@ -25,6 +25,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ru.drmarkes.jobreport.MainActivity" />
         </activity>
+
+        <provider android:name="ru.drmarkes.jobreport.provider.MyProvider"
+            android:authorities="ru.drmarkes.jobreport.provider.ContractClass"
+            android:exported="false"/>
     </application>
 
 </manifest>

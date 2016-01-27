@@ -8,6 +8,7 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import java.util.HashMap;
 
@@ -34,7 +35,7 @@ public class MyProvider extends ContentProvider {
     }
 
     private static class DataBaseHelper extends SQLiteOpenHelper {
-        private static final String DATABASE_NAME = "ContractClassDB";
+        private static final String DATABASE_NAME = "DB";
 
         public static final String DATABASE_TABLE_JOB = ContractClass.Job.TABLE_NAME;
 
@@ -49,12 +50,12 @@ public class MyProvider extends ContentProvider {
         private static final String DATABASE_CREATE_TABLE_JOB =
                 "create table " + DATABASE_TABLE_JOB + " ("
                 + KEY_ROWID + " integer primary key autoincrement, "
-                + KEY_DATE + " integer "
-                + KEY_ORDER + " text "
-                + KEY_DEPARTMENT + " text "
-                + KEY_MANIPULATION + " text "
-                + KEY_PATIENT + " text "
-                + KEY_ROOM_HISTORY + " integer ";
+                + KEY_DATE + " integer , "
+                + KEY_ORDER + " string , "
+                + KEY_DEPARTMENT + " string, "
+                + KEY_MANIPULATION + " string, "
+                + KEY_PATIENT + " string, "
+                + KEY_ROOM_HISTORY + " integer);";
 
         private Context context;
 
@@ -66,6 +67,7 @@ public class MyProvider extends ContentProvider {
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(DATABASE_CREATE_TABLE_JOB);
+      //      db.execSQL("insert into job values (null, 5, 'порядок', 'отделение', 'манипуляция', 'имя', 56);");
         }
 
         @Override
@@ -83,7 +85,29 @@ public class MyProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        return null;
+        SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+        String OrderBy = null;
+
+        switch (sUriMatcher.match(uri)) {
+            case JOB:
+                queryBuilder.setTables(ContractClass.Job.TABLE_NAME);
+                queryBuilder.setProjectionMap(sJobProjectionMap);
+                OrderBy = ContractClass.Job.DEFAULT_SORT_ORDER;
+                break;
+            case JOB_ID:
+                queryBuilder.setTables(ContractClass.Job.TABLE_NAME);
+                queryBuilder.setProjectionMap(sJobProjectionMap);
+                queryBuilder.appendWhere(ContractClass.Job._ID + " = " + uri.getPathSegments().get(ContractClass.Job.JOB_ID_PATH_POSITION));
+                OrderBy = ContractClass.Job.DEFAULT_SORT_ORDER;
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown URI " + uri);
+        }
+
+        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        Cursor cursor = queryBuilder.query(database, projection, selection, selectionArgs, null, null, OrderBy);
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        return cursor;
     }
 
     @Override
@@ -116,10 +140,10 @@ public class MyProvider extends ContentProvider {
         long rowId = -1;
         Uri rowUri = Uri.EMPTY;
 
-        if(values.containsKey(ContractClass.Job.COLUMN_NAME_PATIENT) == false) {
+        if(!values.containsKey(ContractClass.Job.COLUMN_NAME_PATIENT)) {
             values.put(ContractClass.Job.COLUMN_NAME_PATIENT, "");
         }
-        if(values.containsKey(ContractClass.Job.COLUMN_NAME_ROOM_HISTORY) == false) {
+        if(!values.containsKey(ContractClass.Job.COLUMN_NAME_ROOM_HISTORY)) {
             values.put(ContractClass.Job.COLUMN_NAME_ROOM_HISTORY, 0);
         }
 
@@ -134,11 +158,51 @@ public class MyProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        return 0;
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        int count;
+        String finalWhere;
+        String id;
+        switch (sUriMatcher.match(uri)) {
+            case JOB:
+                count = database.delete(ContractClass.Job.TABLE_NAME, selection, selectionArgs);
+                break;
+            case JOB_ID:
+                id = uri.getPathSegments().get(ContractClass.Job.JOB_ID_PATH_POSITION);
+                finalWhere = ContractClass.Job._ID + " = " + id;
+                if(selection != null) {
+                    finalWhere = finalWhere + " AND " + selection;
+                }
+                count = database.delete(ContractClass.Job.TABLE_NAME, finalWhere, selectionArgs);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown URI " + uri);
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
+        return count;
     }
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        return 0;
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        int count;
+        String finalWhere;
+        String id;
+        switch (sUriMatcher.match(uri)) {
+            case JOB:
+                count = database.update(ContractClass.Job.TABLE_NAME, values, selection, selectionArgs);
+                break;
+            case JOB_ID:
+                id = uri.getPathSegments().get(ContractClass.Job.JOB_ID_PATH_POSITION);
+                finalWhere = ContractClass.Job._ID + " = " + id;
+                if(selection != null) {
+                    finalWhere = finalWhere + " AND " + selection;
+                }
+                count = database.update(ContractClass.Job.TABLE_NAME, values, finalWhere, selectionArgs);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown URI " + uri);
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
+        return count;
     }
 }
