@@ -29,9 +29,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
 
-        if(savedInstanceState != null) {
-            return;
-        }
         listViewItems = (ListView)findViewById(R.id.listViewItems);
         dataAdapter = new DataAdapter(this, null, 0);
         listViewItems.setAdapter(dataAdapter);
