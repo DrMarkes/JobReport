@@ -24,9 +24,9 @@ public final class ContractClass {
         public static final Uri CONTENT_ID_URI_BASE = Uri.parse(SCHEME + AUTHORITY + PATH_JOB_ID);
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.ru.drmarkes.job";
         public static final String CONTENT_ITEM_TYPE = "vng.android.cursor.item/vnd.ru.drmarkes.job";
-        public static final String DEFAULT_SORT_ORDER = "date";
-        public static final String COLUMN_NAME_DATE = "order ASC";
-        public static final String COLUMN_NAME_ORDER = "order";
+        public static final String DEFAULT_SORT_ORDER = "date ASC";
+        public static final String COLUMN_NAME_DATE = "date";
+        public static final String COLUMN_NAME_ORDER = "orders";
         public static final String COLUMN_NAME_DEPARTMENT = "department";
         public static final String COLUMN_NAME_MANIPULATION = "manipulation";
         public static final String COLUMN_NAME_PATIENT = "patient";

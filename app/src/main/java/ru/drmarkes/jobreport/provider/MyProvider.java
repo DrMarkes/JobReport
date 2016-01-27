@@ -16,7 +16,7 @@ import java.util.HashMap;
  * Created by Андрей on 24.01.2016.
  */
 public class MyProvider extends ContentProvider {
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final int JOB = 1;
     private static final int JOB_ID = 2;
     private static HashMap<String, String> sJobProjectionMap;
@@ -35,13 +35,13 @@ public class MyProvider extends ContentProvider {
     }
 
     private static class DataBaseHelper extends SQLiteOpenHelper {
-        private static final String DATABASE_NAME = "DB";
+        private static final String DATABASE_NAME = "JobDB";
 
         public static final String DATABASE_TABLE_JOB = ContractClass.Job.TABLE_NAME;
 
         public static final String KEY_ROWID = "_id";
         public static final String KEY_DATE = "date";
-        public static final String KEY_ORDER = "order";
+        public static final String KEY_ORDERS = "orders";
         public static final String KEY_DEPARTMENT = "department";
         public static final String KEY_MANIPULATION = "manipulation";
         public static final String KEY_PATIENT = "patient";
@@ -50,24 +50,21 @@ public class MyProvider extends ContentProvider {
         private static final String DATABASE_CREATE_TABLE_JOB =
                 "create table " + DATABASE_TABLE_JOB + " ("
                 + KEY_ROWID + " integer primary key autoincrement, "
-                + KEY_DATE + " integer , "
-                + KEY_ORDER + " string , "
+                + KEY_DATE + " integer, "
+                + KEY_ORDERS + " string, "
                 + KEY_DEPARTMENT + " string, "
                 + KEY_MANIPULATION + " string, "
                 + KEY_PATIENT + " string, "
                 + KEY_ROOM_HISTORY + " integer);";
 
-        private Context context;
-
         DataBaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
-            this.context = context;
         }
 
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(DATABASE_CREATE_TABLE_JOB);
-      //      db.execSQL("insert into job values (null, 5, 'порядок', 'отделение', 'манипуляция', 'имя', 56);");
+            db.execSQL("insert into job values (null, 5, 'порядок', 'отделение', 'манипуляция', 'имя', 56);");
         }
 
         @Override
@@ -140,11 +137,8 @@ public class MyProvider extends ContentProvider {
         long rowId = -1;
         Uri rowUri = Uri.EMPTY;
 
-        if(!values.containsKey(ContractClass.Job.COLUMN_NAME_PATIENT)) {
-            values.put(ContractClass.Job.COLUMN_NAME_PATIENT, "");
-        }
-        if(!values.containsKey(ContractClass.Job.COLUMN_NAME_ROOM_HISTORY)) {
-            values.put(ContractClass.Job.COLUMN_NAME_ROOM_HISTORY, 0);
+        if(!values.containsKey(ContractClass.Job.COLUMN_NAME_DATE)) {
+            values.put(ContractClass.Job.COLUMN_NAME_DATE, 0);
         }
 
         rowId = db.insert(ContractClass.Job.TABLE_NAME, ContractClass.Job.COLUMN_NAME_DATE, values);
