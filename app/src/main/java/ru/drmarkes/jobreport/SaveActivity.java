@@ -1,7 +1,9 @@
 package ru.drmarkes.jobreport;
 
 import android.app.DatePickerDialog;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +20,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import ru.drmarkes.jobreport.provider.ContractClass;
+
 public class SaveActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, View.OnClickListener {
     static final String YEAR = "year";
     static final String MONTH = "month";
@@ -32,6 +36,11 @@ public class SaveActivity extends AppCompatActivity implements DatePickerDialog.
 
     private TextView dateTextView;
     Calendar calendar;
+    Date date;
+
+    Spinner spinnerOrder;
+    Spinner spinnerDepartment;
+    Spinner spinnerManipulation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,19 +76,19 @@ public class SaveActivity extends AppCompatActivity implements DatePickerDialog.
     }
 
     private void initSpinner() {
-        Spinner spinnerOrder = (Spinner) findViewById(R.id.spinnerOrder);
+        spinnerOrder = (Spinner) findViewById(R.id.spinnerOrder);
         ArrayAdapter<CharSequence> adapterOrder = ArrayAdapter.createFromResource(
                 this, R.array.order, android.R.layout.simple_spinner_item);
         adapterOrder.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerOrder.setAdapter(adapterOrder);
 
-        Spinner spinnerDepartment = (Spinner) findViewById(R.id.spinnerDepartment);
+        spinnerDepartment = (Spinner) findViewById(R.id.spinnerDepartment);
         ArrayAdapter<CharSequence> adapterDepartment = ArrayAdapter.createFromResource(
                 this, R.array.department, android.R.layout.simple_spinner_item);
         adapterDepartment.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerDepartment.setAdapter(adapterDepartment);
 
-        Spinner spinnerManipulation = (Spinner) findViewById(R.id.spinnerManipulation);
+        spinnerManipulation = (Spinner) findViewById(R.id.spinnerManipulation);
         ArrayAdapter<CharSequence> adapterManipulation = ArrayAdapter.createFromResource(
                 this, R.array.manipulation, android.R.layout.simple_spinner_item);
         adapterManipulation.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -93,8 +102,17 @@ public class SaveActivity extends AppCompatActivity implements DatePickerDialog.
                 dialogFragment.show(getSupportFragmentManager(), "datePicker");
                 break;
             case R.id.save:
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
+
+                ContentValues saveContentValues = new ContentValues();
+                saveContentValues.put(ContractClass.Job.COLUMN_NAME_DATE, date.getTime()/1000);
+                saveContentValues.put(ContractClass.Job.COLUMN_NAME_ORDER, spinnerOrder.getSelectedItem().toString());
+                saveContentValues.put(ContractClass.Job.COLUMN_NAME_DEPARTMENT, spinnerDepartment.getSelectedItem().toString());
+                saveContentValues.put(ContractClass.Job.COLUMN_NAME_MANIPULATION, spinnerManipulation.getSelectedItem().toString());
+                saveContentValues.put(ContractClass.Job.COLUMN_NAME_PATIENT, name);
+                saveContentValues.put(ContractClass.Job.COLUMN_NAME_ROOM_HISTORY, number);
+
+                getContentResolver().insert(ContractClass.Job.CONTENT_URI, saveContentValues);
+                finish();
                 break;
         }
     }
@@ -110,7 +128,7 @@ public class SaveActivity extends AppCompatActivity implements DatePickerDialog.
 
     private void showDate() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMMM yyyy _ HH:mm:ss", Locale.getDefault());
-        Date date = calendar.getTime();
+        date = calendar.getTime();
         dateTextView.setText(simpleDateFormat.format(date));
     }
 
