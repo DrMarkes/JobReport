@@ -2,8 +2,6 @@ package ru.drmarkes.jobreport;
 
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +12,8 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -31,8 +31,8 @@ public class SaveActivity extends AppCompatActivity implements DatePickerDialog.
     int month;
     int day;
 
-    String name;
-    String number;
+    TextView nameEditText;
+    TextView numberEditText;
 
     private TextView dateTextView;
     Calendar calendar;
@@ -62,17 +62,11 @@ public class SaveActivity extends AppCompatActivity implements DatePickerDialog.
             day = calendar.get(Calendar.DAY_OF_MONTH);
         }
 
+        nameEditText = (EditText) findViewById(R.id.nameEditText);
+        numberEditText = (EditText) findViewById(R.id.numberEditText);
+
         showDate();
         initSpinner();
-        initEditText();
-    }
-
-    private void initEditText() {
-        EditText nameEditText = (EditText) findViewById(R.id.nameEditText);
-        name = nameEditText.getText().toString();
-
-        EditText numberEditText = (EditText) findViewById(R.id.numberEditText);
-        number = numberEditText.getText().toString();
     }
 
     private void initSpinner() {
@@ -102,6 +96,8 @@ public class SaveActivity extends AppCompatActivity implements DatePickerDialog.
                 dialogFragment.show(getSupportFragmentManager(), "datePicker");
                 break;
             case R.id.save:
+                String name = nameEditText.getText().toString();
+                String number = numberEditText.getText().toString();
 
                 ContentValues saveContentValues = new ContentValues();
                 saveContentValues.put(ContractClass.Job.COLUMN_NAME_DATE, date.getTime()/1000);
@@ -110,7 +106,6 @@ public class SaveActivity extends AppCompatActivity implements DatePickerDialog.
                 saveContentValues.put(ContractClass.Job.COLUMN_NAME_MANIPULATION, spinnerManipulation.getSelectedItem().toString());
                 saveContentValues.put(ContractClass.Job.COLUMN_NAME_PATIENT, name);
                 saveContentValues.put(ContractClass.Job.COLUMN_NAME_ROOM_HISTORY, number);
-
                 getContentResolver().insert(ContractClass.Job.CONTENT_URI, saveContentValues);
                 finish();
                 break;

@@ -3,7 +3,6 @@ package ru.drmarkes.jobreport;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,10 +24,18 @@ public class DataAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View root = layoutInflater.inflate(android.R.layout.simple_expandable_list_item_1, parent, false);
+        View root = layoutInflater.inflate(R.layout.my_list_item, parent, false);
         Holder holder = new Holder();
-        TextView textViewRecord = (TextView)root.findViewById(android.R.id.text1);
-        holder.textViewRecord = textViewRecord;
+        TextView textViewOrders = (TextView)root.findViewById(R.id.orders);
+        TextView textViewDepartment = (TextView)root.findViewById(R.id.department);
+        TextView textViewManipulation = (TextView)root.findViewById(R.id.manipulation);
+        TextView textViewPatient = (TextView)root.findViewById(R.id.patient);
+        TextView textViewNumber = (TextView)root.findViewById(R.id.number);
+        holder.textViewOrders = textViewOrders;
+        holder.textViewDepartment = textViewDepartment;
+        holder.textViewManipulation = textViewManipulation;
+        holder.textViewPatient = textViewPatient;
+        holder.textViewNumber = textViewNumber;
         root.setTag(holder);
         return root;
     }
@@ -41,17 +48,24 @@ public class DataAdapter extends CursorAdapter {
         String department = cursor.getString(cursor.getColumnIndex(ContractClass.Job.COLUMN_NAME_DEPARTMENT));
         String manipulation = cursor.getString(cursor.getColumnIndex(ContractClass.Job.COLUMN_NAME_MANIPULATION));
         String patient = cursor.getString(cursor.getColumnIndex(ContractClass.Job.COLUMN_NAME_PATIENT));
-        Integer roomHisrory = cursor.getInt(cursor.getColumnIndex(ContractClass.Job.COLUMN_NAME_ROOM_HISTORY));
+        String roomHisrory ="№" + cursor.getInt(cursor.getColumnIndex(ContractClass.Job.COLUMN_NAME_ROOM_HISTORY));
         Holder holder = (Holder)view.getTag();
         if(holder != null) {
-            holder.textViewRecord.setText(date + " | " + order + " | " + department +
-                    " | " + manipulation + " | " + patient + " | " + roomHisrory);
+            holder.textViewOrders.setText(order);
+            holder.textViewDepartment.setText(department);
+            holder.textViewManipulation.setText(manipulation);
+            holder.textViewPatient.setText(patient);
+            holder.textViewNumber.setText(roomHisrory);
             holder.RecordID = id;
         }
     }
 
     private static class Holder {
-        public TextView textViewRecord;
+        public TextView textViewOrders;
+        public TextView textViewDepartment;
+        public TextView textViewManipulation;
+        public TextView textViewPatient;
+        public TextView textViewNumber;
         public long RecordID;
     }
 }

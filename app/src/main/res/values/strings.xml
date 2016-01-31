@@ -4,8 +4,8 @@
     <string name="title_activity_save">Ввод данных</string>
 
     <string-array name="order">
-        <item>По экстренным показаниям</item>
-        <item>В плановом порядке</item>
+        <item>экстренно</item>
+        <item>планово</item>
     </string-array>
 
     <string-array name="department">

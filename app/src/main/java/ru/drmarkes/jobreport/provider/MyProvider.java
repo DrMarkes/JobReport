@@ -16,7 +16,7 @@ import java.util.HashMap;
  * Created by Андрей on 24.01.2016.
  */
 public class MyProvider extends ContentProvider {
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
     private static final int JOB = 1;
     private static final int JOB_ID = 2;
     private static HashMap<String, String> sJobProjectionMap;
@@ -64,7 +64,6 @@ public class MyProvider extends ContentProvider {
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(DATABASE_CREATE_TABLE_JOB);
-            db.execSQL("insert into job values (null, 5, 'порядок', 'отделение', 'манипуляция', 'имя', 56);");
         }
 
         @Override
@@ -143,7 +142,7 @@ public class MyProvider extends ContentProvider {
 
         rowId = db.insert(ContractClass.Job.TABLE_NAME, ContractClass.Job.COLUMN_NAME_DATE, values);
         if(rowId > 0) {
-            rowUri = ContentUris.withAppendedId(ContractClass.Job.CONTENT_ID_URI_BASE, rowId);
+            rowUri = ContentUris.withAppendedId(ContractClass.Job.CONTENT_URI, rowId);
             getContext().getContentResolver().notifyChange(rowUri, null);
         }
 
