@@ -33,15 +33,6 @@ public final class ContractClass {
         public static final String COLUMN_NAME_MANIPULATION = "manipulation";
         public static final String COLUMN_NAME_PATIENT = "patient";
         public static final String COLUMN_NAME_ROOM_HISTORY = "room_history";
-        public static final String[] DEFAULT_PROJECTION = new String[] {
-                Job._ID,
-                Job.COLUMN_NAME_DATE,
-                Job.COLUMN_NAME_ORDER,
-                Job.COLUMN_NAME_DEPARTMENT,
-                Job.COLUMN_NAME_MANIPULATION,
-                Job.COLUMN_NAME_PATIENT,
-                Job.COLUMN_NAME_ROOM_HISTORY
-        };
 
         public static final String[] DATA_PROJECTION = new String[] {
                 Job._ID,

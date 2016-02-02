@@ -19,19 +19,12 @@ public class MyProvider extends ContentProvider {
     private static final int DATABASE_VERSION = 4;
     private static final int JOB = 1;
     private static final int JOB_ID = 2;
-    private static HashMap<String, String> sJobProjectionMap;
     private DataBaseHelper dbHelper;
     private static final UriMatcher sUriMatcher;
     static {
         sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         sUriMatcher.addURI(ContractClass.AUTHORITY, "job", JOB);
         sUriMatcher.addURI(ContractClass.AUTHORITY, "job/#", JOB_ID);
-
-        sJobProjectionMap = new HashMap<>();
-        for(int i = 0; i < ContractClass.Job.DEFAULT_PROJECTION.length; i++) {
-            sJobProjectionMap.put(ContractClass.Job.DEFAULT_PROJECTION[i],
-                    ContractClass.Job.DEFAULT_PROJECTION[i]);
-        }
     }
 
     private static class DataBaseHelper extends SQLiteOpenHelper {
@@ -82,12 +75,11 @@ public class MyProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
-        String OrderBy = null;
+        String OrderBy;
 
         switch (sUriMatcher.match(uri)) {
             case JOB:
                 queryBuilder.setTables(ContractClass.Job.TABLE_NAME);
-            //    queryBuilder.setProjectionMap(sJobProjectionMap);
                 OrderBy = ContractClass.Job.DEFAULT_SORT_ORDER;
                 break;
             case JOB_ID:
