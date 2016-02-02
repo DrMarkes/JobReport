@@ -13,12 +13,19 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import ru.drmarkes.jobreport.provider.ContractClass;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
     private ListView listViewItems;
     private DataAdapter dataAdapter;
+    private String dayImput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +35,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setSupportActionBar(toolbar);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
+
+        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MM yyyy", Locale.getDefault());
+        dayImput = simpleDateFormat.format(calendar.getTime());
+
+        Toast.makeText(this, dayImput, Toast.LENGTH_LONG).show();
 
         listViewItems = (ListView)findViewById(R.id.listViewItems);
         dataAdapter = new DataAdapter(this, null, 0);
@@ -65,12 +78,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String[] selection = new String[] {dayImput};
+        String day = "day = ?";
         return new CursorLoader(
                 this,
                 ContractClass.Job.CONTENT_URI,
-                ContractClass.Job.DEFAULT_PROJECTION,
-                null,
-                null,
+                ContractClass.Job.DATA_PROJECTION,
+                day,
+                selection,
                 null);
     }
 

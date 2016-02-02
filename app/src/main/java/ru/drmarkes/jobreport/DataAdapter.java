@@ -43,19 +43,24 @@ public class DataAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         long id = cursor.getLong(cursor.getColumnIndex(ContractClass.Job._ID));
-        long date = cursor.getLong(cursor.getColumnIndex(ContractClass.Job.COLUMN_NAME_DATE));
+        String date = cursor.getString(cursor.getColumnIndex(ContractClass.Job.COLUMN_NAME_DAY));
         String order = cursor.getString(cursor.getColumnIndex(ContractClass.Job.COLUMN_NAME_ORDER));
         String department = cursor.getString(cursor.getColumnIndex(ContractClass.Job.COLUMN_NAME_DEPARTMENT));
         String manipulation = cursor.getString(cursor.getColumnIndex(ContractClass.Job.COLUMN_NAME_MANIPULATION));
         String patient = cursor.getString(cursor.getColumnIndex(ContractClass.Job.COLUMN_NAME_PATIENT));
-        String roomHisrory ="№" + cursor.getInt(cursor.getColumnIndex(ContractClass.Job.COLUMN_NAME_ROOM_HISTORY));
+        String roomHisrory = cursor.getString(cursor.getColumnIndex(ContractClass.Job.COLUMN_NAME_ROOM_HISTORY));
+        if(!roomHisrory.equals("")) {
+            roomHisrory ="№" + cursor.getString(cursor.getColumnIndex(ContractClass.Job.COLUMN_NAME_ROOM_HISTORY));
+        } else {
+            roomHisrory = "";
+        }
         Holder holder = (Holder)view.getTag();
         if(holder != null) {
             holder.textViewOrders.setText(order);
             holder.textViewDepartment.setText(department);
             holder.textViewManipulation.setText(manipulation);
             holder.textViewPatient.setText(patient);
-            holder.textViewNumber.setText(roomHisrory);
+            holder.textViewNumber.setText(date);
             holder.RecordID = id;
         }
     }

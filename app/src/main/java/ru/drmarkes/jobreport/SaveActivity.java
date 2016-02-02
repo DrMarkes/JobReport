@@ -122,7 +122,7 @@ public class SaveActivity extends AppCompatActivity implements DatePickerDialog.
     }
 
     private void showDate() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMMM yyyy _ HH:mm:ss", Locale.getDefault());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
         date = calendar.getTime();
         dateTextView.setText(simpleDateFormat.format(date));
     }

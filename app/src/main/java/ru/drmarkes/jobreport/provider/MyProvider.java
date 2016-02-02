@@ -87,12 +87,11 @@ public class MyProvider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
             case JOB:
                 queryBuilder.setTables(ContractClass.Job.TABLE_NAME);
-                queryBuilder.setProjectionMap(sJobProjectionMap);
+            //    queryBuilder.setProjectionMap(sJobProjectionMap);
                 OrderBy = ContractClass.Job.DEFAULT_SORT_ORDER;
                 break;
             case JOB_ID:
                 queryBuilder.setTables(ContractClass.Job.TABLE_NAME);
-                queryBuilder.setProjectionMap(sJobProjectionMap);
                 queryBuilder.appendWhere(ContractClass.Job._ID + " = " + uri.getPathSegments().get(ContractClass.Job.JOB_ID_PATH_POSITION));
                 OrderBy = ContractClass.Job.DEFAULT_SORT_ORDER;
                 break;
