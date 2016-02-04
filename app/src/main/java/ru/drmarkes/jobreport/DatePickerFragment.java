@@ -1,23 +1,31 @@
 package ru.drmarkes.jobreport;
 
 import android.app.Activity;
+import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.widget.DatePicker;
 
-import java.util.Calendar;
+import static android.content.DialogInterface.*;
 
 /**
  * Created by Андрей on 22.01.2016.
  */
 public class DatePickerFragment extends DialogFragment {
-    private DatePickerDialog.OnDateSetListener listener;
+    private static final String DAY = "Day";
+    private static final String MONTH = "Month";
+    private static final String YEAR = "Year";
+
+    private OnDateSetListener listener;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        listener = (DatePickerDialog.OnDateSetListener) activity;
+        listener = (OnDateSetListener) activity;
     }
 
     @Override
@@ -28,11 +36,40 @@ public class DatePickerFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        Bundle bundle = getArguments();
+        int year = bundle.getInt(YEAR);
+        int month = bundle.getInt(MONTH);
+        int day = bundle.getInt(DAY);
 
-        return new DatePickerDialog(getActivity(), listener, year, month, day);
+        final DatePickerDialog datePickerDialog =
+                new DatePickerDialog(getActivity(), getConstructorListener(), year, month, day);
+
+        if(isAffectedVersion()) {
+            datePickerDialog.setButton(BUTTON_POSITIVE,
+                    getActivity().getString(android.R.string.ok), new OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            DatePicker datePicker = datePickerDialog.getDatePicker();
+                            listener.onDateSet(datePicker, datePicker.getYear(), datePicker.getMonth(),
+                                    datePicker.getDayOfMonth());
+                        }
+                    });
+            datePickerDialog.setButton(BUTTON_NEGATIVE,
+                    getActivity().getString(android.R.string.cancel), new OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {}
+                    });
+        }
+
+        return datePickerDialog;
+    }
+
+    private boolean isAffectedVersion() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
+                && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP;
+    }
+
+    private OnDateSetListener getConstructorListener() {
+        return isAffectedVersion() ? null: listener;
     }
 }

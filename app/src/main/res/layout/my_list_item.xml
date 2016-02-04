@@ -29,7 +29,8 @@
         android:layout_below="@+id/department"
         android:layout_centerHorizontal="true"
         android:text="спинномозговая анестезия"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textColor="@color/colorListViewText"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/patient"

@@ -12,8 +12,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -23,9 +21,9 @@ import java.util.TimeZone;
 import ru.drmarkes.jobreport.provider.ContractClass;
 
 public class SaveActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, View.OnClickListener {
-    static final String YEAR = "year";
-    static final String MONTH = "month";
-    static final String DAY = "day";
+    private static final String YEAR = "Year";
+    private static final String MONTH = "Month";
+    private static final String DAY = "Day";
 
     int year;
     int month;
@@ -92,7 +90,13 @@ public class SaveActivity extends AppCompatActivity implements DatePickerDialog.
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.dateTextView:
+                Bundle bundle = new Bundle();
+                bundle.putInt(DAY, day);
+                bundle.putInt(MONTH, month);
+                bundle.putInt(YEAR, year);
+
                 DialogFragment dialogFragment = new DatePickerFragment();
+                dialogFragment.setArguments(bundle);
                 dialogFragment.show(getSupportFragmentManager(), "datePicker");
                 break;
             case R.id.save:
@@ -132,7 +136,6 @@ public class SaveActivity extends AppCompatActivity implements DatePickerDialog.
         savedInstanseState.putInt(YEAR, year);
         savedInstanseState.putInt(MONTH, month);
         savedInstanseState.putInt(DAY, day);
-
         super.onSaveInstanceState(savedInstanseState);
     }
 }
